@@ -4,35 +4,20 @@ Draft #1:
 Using Flask to handle HTTP requests
 
 """
-import socket
 from flask import Flask, request
+from requests import get
 
 app = Flask(__name__)
 
-def proxyHandle(path):
-    host = request.headers.get('Host')
-    method = request.method
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect((f"{host}",80))
-    req = f"{method} /{path} HTTP/1.1\r\nHost: {host}\r\n\r\n"
-    s.sendall(str.encode(req))
-    resp = s.recv(4096)
-    s.close
+@app.route('/', defaults={'path': ''})
+
+@app.route('/<path:path>')
+def proxy(path):
+#This allows for something like this url: http://127.0.0.1:5000/?host=https://XXX.com to return the content of whatever page is being asked for
+    SITE_NAME = 'http://127.0.0.1:8000/'
+    resp = get(f'{SITE_NAME}{path}').content
+    print(request.url)
     return resp
-    
-
-
-#reqPath functions as a dynamic var that allows any page to be requested
-#instead of the alternative of creating a route for every single page that could be on a remote site
-@app.route("/<reqPath>", methods=['GET','POST'])
-def render(reqPath):
-    return proxyHandle(reqPath)
-    
-
-@app.route('/')
-def main():
-    print(request.headers)
-    return "main page"
 
 #runs the app without having to set any of the env vars that are listed in the documentation
 if __name__ == '__main__':
