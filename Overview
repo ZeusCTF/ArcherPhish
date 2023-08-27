@@ -1,0 +1,9 @@
+Generally, authentication with MFA involves the user providing 3(ish) pieces of information.  The user typically has to provide a (1) username, (2) password, (3) mfa code.  After doing so, the server returns a session cookie that is attached to that user's web requests going forward.  That way they won't need to re-authenticate when browsing to a new page.
+
+In this attack, the adversary stands up a proxy server that intercepts requests being made from target users to the legitimate site.  This is technically not a vulnerability in an authentication mechanism or MFA itself as this attack seeks to capture the session cookie generated for a properly authenticated session to impersonate the victim.
+To do this effectively, the proxy server "proxies" HTTP packets sent from the vicitm to the legitimate site, and vice-versa.  This way, the attacker won't need to develop an entire site, but instead utilizes the legitimate site to execute this attack.  It should be noted, the only noticiable difference in this case would be the URL differing from the legitimate domain.
+
+Frameworks do already exist to perform this type of attack, with perhaps the largest being Evilginx2, though many others can be found.
+
+Because this attack uses the actual website, there will be no noticiable difference in terms of website activity so even a savvy user can fall victim to this attack.  Therefore, users should be trained to also validate the URLs being visited along with the site itself.  
+Of course, along with training to notice suspicious sites and URLs, users should also be trained on which links to click and what attachements they open.  Due to the sophisticated nature of this attack, it would theoretically be much easier to prevent a user from noticing a suspicious message enticing them to click this link rather than identifying the site itself as malicious.
